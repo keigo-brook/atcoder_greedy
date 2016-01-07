@@ -10,6 +10,7 @@ ruby start.rb http://abc008.contest.atcoder.jp
 
 こんな感じになる
 
+```
 ├── LICENSE
 ├── README.md
 ├── abc008
@@ -34,6 +35,7 @@ ruby start.rb http://abc008.contest.atcoder.jp
 │       ├── out.txt
 │       └── test_abc008_4.rb
 └── start.rb
+```
 
 各問題について,in.txtがインプット,out.txtがアウトプット,abc_00X_Y.rbが解答ファイル,test_abc_00X_Y.rbがテストファイルとなる。
 

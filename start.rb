@@ -113,6 +113,8 @@ end
   urls.push(name: "#{contest_name}_#{task_num[i]}", path: base_url + "/tasks/#{contest_name}_#{task_num[i]}")
 end
 
+FileUtils.mkdir(contest_name)
+
 urls.each do |url|
   charset = nil
   html = open(url[:path]) do |f|
@@ -122,21 +124,21 @@ urls.each do |url|
 
   doc = Nokogiri::HTML.parse(html, nil, charset)
 
-  FileUtils.mkdir(url[:name])
+  FileUtils.mkdir("./#{contest_name}/#{url[:name]}")
 
-  in_file = File.new("./#{url[:name]}/in.txt", 'w')
-  out_file = File.new("./#{url[:name]}/out.txt", 'w')
+  in_file = File.new("./#{contest_name}/#{url[:name]}/in.txt", 'w')
+  out_file = File.new("./#{contest_name}/#{url[:name]}/out.txt", 'w')
 
   test_file_content = TEST_TEMPLATE.clone
   test_file_content.gsub!(/NAME/, url[:name].capitalize)
   test_file_content.gsub!(/FILE/, url[:name])
-  test_file = File.new("./#{url[:name]}/test_#{url[:name]}.rb", 'w')
+  test_file = File.new("./#{contest_name}/#{url[:name]}/test_#{url[:name]}.rb", 'w')
   test_file.print test_file_content
   test_file.close
 
   solve_file_content = SOLVE_TEMPLATE.clone
   solve_file_content.gsub!(/NAME/, url[:name].capitalize)
-  solve_file = File.new("./#{url[:name]}/#{url[:name]}.rb", 'w')
+  solve_file = File.new("./#{contest_name}/#{url[:name]}/#{url[:name]}.rb", 'w')
   solve_file.print solve_file_content
   solve_file.close
 

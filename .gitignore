@@ -1,16 +1,22 @@
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Ruby template
 *.gem
 *.rbc
 /.config
-/coverage/
 /InstalledFiles
-/pkg/
-/spec/reports/
 /spec/examples.txt
 /test/tmp/
 /test/version_tmp/
-/tmp/
 
 ## Specific to RubyMotion:
 .dat*
@@ -19,12 +25,9 @@ build/
 
 ## Documentation cache and generated files:
 /.yardoc/
-/_yardoc/
-/doc/
 /rdoc/
 
 ## Environment normalisation:
-/.bundle/
 /vendor/bundle
 /lib/bundler/man/
 
@@ -36,10 +39,6 @@ build/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
-### JetBrains template
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
-
-*.iml
 
 ## Directory-based project format:
 .idea/

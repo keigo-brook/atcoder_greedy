@@ -1,0 +1,2 @@
+require 'atcoder_greedy'
+AtcoderGreedy::Command.start

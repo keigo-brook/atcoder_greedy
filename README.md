@@ -8,14 +8,13 @@
 ## Usage
 
 ```
-atcoder_greedy create CONTESTNAME
+$ atcoder_greedy create CONTESTNAME
 ```
 
 example: ABC008の場合
 
 ```
-atcoder_greedy create abc008
-
+$ atcoder_greedy create abc008
 ```
 
 とすると、以下のようなファイルが生成される。

@@ -50,8 +50,8 @@ abc00X_Y.rbのsolveメソッドに問題の解答を書く。
 テストを実行するには、
 
 ```
-cd abc00X_Y/
-ruby test_abc00X_Y.rb
+$ cd abc00X_Y/
+$ ruby test_abc00X_Y.rb
 ```
 
 とすれば良い。

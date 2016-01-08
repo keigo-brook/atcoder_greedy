@@ -5,7 +5,7 @@ module AtcoderGreedy
   class Command < Thor
     desc 'create CONTESTNAME', 'create contest templates for CONTESTNAME'
     def create(contest_name)
-      Contest.new(contest_name)
+      Contest.new(contest_name.downcase)
     end
   end
 

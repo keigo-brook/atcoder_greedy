@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["goog@brookbach.com"]
 
   spec.summary       = %q{This gem is very useful atcoder plugin.}
-  spec.description   = %q{By using this plugin, You can create contest templates.}
+  spec.description   = %q{By using this plugin, You can create atcoder-contest templates.}
   spec.homepage      = "https://github.com/keigo-brook/atcoder_greedy"
   spec.license       = "MIT"
 

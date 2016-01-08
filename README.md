@@ -43,7 +43,7 @@ $ atcoder_greedy create abc008
     └── test_abc008_4.rb
 ```
 
-各問題について,in.txtがインプット,out.txtがアウトプット,abc_00X_Y.rbが解答ファイル,test_abc_00X_Y.rbがテストファイルとなる。
+各問題について,input.txtがインプット,output.txtがアウトプット,abc_00X_Y.rbが解答ファイル,test_abc_00X_Y.rbがテストファイルとなる。
 
 abc00X_Y.rbのsolveメソッドに問題の解答を書く。
 

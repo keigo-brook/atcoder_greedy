@@ -3,16 +3,6 @@
 
 ## Installation
 
-```ruby
-gem 'atcoder_greedy'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
     $ gem install atcoder_greedy
 
 ## Usage

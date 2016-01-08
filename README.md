@@ -3,25 +3,21 @@
 
 ## Installation
 
-```ruby
-gem 'atcoder_greedy'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
     $ gem install atcoder_greedy
 
 ## Usage
 
 ```
-atcoder_greedy create CONTESTNAME
+$ atcoder_greedy create CONTESTNAME
 ```
 
-example: ABC008の場合,下のようにファイルが生成される
+example: ABC008の場合
+
+```
+$ atcoder_greedy create abc008
+```
+
+とすると、以下のようなファイルが生成される。
 
 ```
 .
@@ -47,15 +43,15 @@ example: ABC008の場合,下のようにファイルが生成される
     └── test_abc008_4.rb
 ```
 
-各問題について,in.txtがインプット,out.txtがアウトプット,abc_00X_Y.rbが解答ファイル,test_abc_00X_Y.rbがテストファイルとなる。
+各問題について,input.txtがインプット,output.txtがアウトプット,abc_00X_Y.rbが解答ファイル,test_abc_00X_Y.rbがテストファイルとなる。
 
 abc00X_Y.rbのsolveメソッドに問題の解答を書く。
 
 テストを実行するには、
 
 ```
-cd abc00X_Y/
-ruby test_abc00X_Y.rb
+$ cd abc00X_Y/
+$ ruby test_abc00X_Y.rb
 ```
 
 とすれば良い。

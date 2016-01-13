@@ -7,63 +7,71 @@
 
 ## Usage
 
+### テンプレートファイルの作成
 ```
+# create contest templates
 $ atcoder_greedy create CONTESTNAME
 ```
 
-example: ABC008の場合
+### テストの実行
+```
+$ cd CONTESTNAME
+$ atcoder_greedy test PROBLEMNAME
+```
+
+## 使用例
+ABC009の場合
 
 ```
-$ atcoder_greedy create abc008
+$ atcoder_greedy create abc009
 ```
 
 とすると、以下のようなファイルが生成される。
 
 ```
 .
-├── abc008_1
-│   ├── abc008_1.rb
-│   ├── input.txt
-│   ├── output.txt
-│   └── test_abc008_1.rb
-├── abc008_2
-│   ├── abc008_2.rb
-│   ├── input.txt
-│   ├── output.txt
-│   └── test_abc008_2.rb
-├── abc008_3
-│   ├── abc008_3.rb
-│   ├── input.txt
-│   ├── output.txt
-│   └── test_abc008_3.rb
-└── abc008_4
-    ├── abc008_4.rb
-    ├── input.txt
-    ├── output.txt
-    └── test_abc008_4.rb
+├── A.rb
+├── B.rb
+├── C.rb
+├── D.rb
+├── input_A.txt
+├── input_B.txt
+├── input_C.txt
+└── input_D.txt
 ```
 
-各問題について,input.txtがインプット,output.txtがアウトプット,abc_00X_Y.rbが解答ファイル,test_abc_00X_Y.rbがテストファイルとなる。
+各問題について,X.rbに自分の解答を記述すれば良い。
+input_X.txtにはX.rbのサンプルインプット，アウトプットが記載されている.
 
-abc00X_Y.rbのsolveメソッドに問題の解答を書く。
-
-テストを実行するには、
+A問題についてテストを実行するには、
 
 ```
-$ cd abc00X_Y/
-$ ruby test_abc00X_Y.rb
+$ atcoder_greedy test A.rb
 ```
 
-とすれば良い。
+とすると、以下のようにテスト結果が表示される。
+
+```
+Running a test for problem A...
+Testcase #0 ... PASSED! Time: 0.04137948894640431s
+Testcase #1 ... FAILED! Time: 0.051738745998591185s
+Your Output:
+3
+
+Correct Answer:
+2
+
+Testcase #2 ... PASSED! Time: 0.05054747499525547s
+Test done.
+```
 
 ## 実装した機能
+- 解答ファイルのテンプレート生成
 - サンプルインプット、アウトプットを用いたテストファイルの生成
-- 解答のテンプレート生成
+- テスト実行コマンド
 
 
 ## TODO,実装したい機能
-- リファクタリング
-- テスト結果を見やすく
 - 問題を指定してその問題のみ生成
 - 提出機能
 - 多言語もテンプレートから生成したい

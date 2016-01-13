@@ -2,13 +2,18 @@ require 'atcoder_greedy'
 require 'atcoder_greedy/command'
 require 'diff/lcs'
 require 'tempfile'
+require 'benchmark'
+
 
 module AtcoderGreedy
   class Command < Thor
-    desc 'test PROBLEM', 'test your solution'
+    desc 'test PROBLEMNAME', 'test your solution'
 
     def test(problem_name)
-      TestCase.new(problem_name).validate
+      name = File.basename(problem_name, '.*')
+      puts "Running a test for problem #{name}..."
+      TestCase.new(name).validate
+      puts "Test done."
     end
   end
 
@@ -51,25 +56,27 @@ module AtcoderGreedy
       @input.size.times do |j|
         myout_file = Tempfile.new(['myout', '.txt'], './')
         myout_file.open
-        pid = Process.fork do
-          exec "ruby #{@exec_file} < #{@input[j].path} > #{myout_file.path}"
-          @input[j].close
-          myout_file.close(false)
+        result = Benchmark.realtime do
+          pid = Process.fork do
+            exec "ruby #{@exec_file} < #{@input[j].path} > #{myout_file.path}"
+            @input[j].close
+            myout_file.close(false)
+          end
+          Process.waitpid pid
         end
-        Process.waitpid pid
 
         myout = myout_file.open.read
         myout_file.close
         correct = File.open("#{@output[j].path}").read
         diffs = Diff::LCS.diff(myout, correct)
         if diffs.size == 0
-          puts "Testcase ##{j} ... PASSED!"
+          puts "Testcase ##{j} ... PASSED! Time: #{result}s"
         else
-          puts "Testcase ##{j} ... FAILED!"
+          puts "Testcase ##{j} ... FAILED! Time: #{result}s"
           puts "Your Output:"
-          puts "#{myout}"
+          puts "#{myout}\n"
           puts "Correct Answer:"
-          puts "#{correct}"
+          puts "#{correct}\n"
         end
       end
     end

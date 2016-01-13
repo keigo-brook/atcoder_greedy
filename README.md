@@ -1,22 +1,33 @@
 # AtcoderGreedy
-楽にatcoderを使いたい
+楽にatcoderを使いたい.
+毎回サンプルインプットをコピペするのめんどくさくないですか？
 
 ## Installation
 
     $ gem install atcoder_greedy
 
+## 初期設定
+
+configコマンドを使用してデフォルト言語の設定をしてください。
+```
+$ atcoder_greedy config
+Choose default language from: ["rb", "cpp"]
+Input languages: cpp
+Update Your default language to [cpp].
+$ 
+```
+
 ## Usage
 
 ### テンプレートファイルの作成
 ```
-# create contest templates
 $ atcoder_greedy create CONTESTNAME
 ```
 
 ### テストの実行
 ```
 $ cd CONTESTNAME
-$ atcoder_greedy test PROBLEMNAME
+$ atcoder_greedy test PROBLEM_FILE_NAME
 ```
 
 ## 使用例
@@ -52,16 +63,22 @@ $ atcoder_greedy test A.rb
 とすると、以下のようにテスト結果が表示される。
 
 ```
-Running a test for problem A...
-Testcase #0 ... PASSED! Time: 0.04137948894640431s
-Testcase #1 ... FAILED! Time: 0.051738745998591185s
+Running a test for problem A.rb...
+-------------------- Compile Done --------------------
+-------------------- Testcase #0 -------------------- FAILED! Time: 0.00727s
+Your Output:
+5
+Correct Answer:
+1
+
+-------------------- Testcase #1 -------------------- PASSED! Time: 0.04882s
+
+-------------------- Testcase #2 -------------------- FAILED! Time: 0.00614s
 Your Output:
 3
-
 Correct Answer:
-2
+1
 
-Testcase #2 ... PASSED! Time: 0.05054747499525547s
 Test done.
 ```
 
@@ -69,12 +86,16 @@ Test done.
 - 解答ファイルのテンプレート生成
 - サンプルインプット、アウトプットを用いたテストファイルの生成
 - テスト実行コマンド
+- ruby, c++ に対応
 
 
 ## TODO,実装したい機能
 - 問題を指定してその問題のみ生成
+- ユーザーテンプレート機能
 - 提出機能
-- 多言語もテンプレートから生成したい
+- 言語対応の拡大
+- gemのテスト作成
+
 
 ## Development
 

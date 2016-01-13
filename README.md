@@ -11,7 +11,7 @@
 configコマンドを使用してデフォルト言語の設定をしてください。
 ```
 $ atcoder_greedy config
-Choose default language from: ["rb", "cpp"]
+Choose default language from: ["rb", "cpp", "c"]
 Input languages: cpp
 Update Your default language to [cpp].
 $ 
@@ -86,7 +86,7 @@ Test done.
 - 解答ファイルのテンプレート生成
 - サンプルインプット、アウトプットを用いたテストファイルの生成
 - テスト実行コマンド
-- ruby, c++ に対応
+- ruby, c/c++ に対応
 
 
 ## TODO,実装したい機能

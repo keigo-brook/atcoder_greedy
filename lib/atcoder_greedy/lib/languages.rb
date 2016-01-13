@@ -1,5 +1,5 @@
 class Languages
-  ALL_LANGUAGES = %w(rb cpp)
+  ALL_LANGUAGES = %w(rb cpp c)
   def initialize(solve_file)
     @solve_file = solve_file
   end
@@ -27,6 +27,17 @@ class Cpp < Languages
   def compile(problem_name)
     @exec_file = "#{problem_name}.out"
     system "g++ #{@solve_file} -o #{problem_name}.out"
+  end
+
+  def execute(input_path, output_path)
+    system "./#{@exec_file} < #{input_path} > #{output_path}"
+  end
+end
+
+class C < Languages
+  def compile(problem_name)
+    @exec_file = "#{problem_name}.out"
+    system "gcc #{@solve_file} -o #{problem_name}.out"
   end
 
   def execute(input_path, output_path)

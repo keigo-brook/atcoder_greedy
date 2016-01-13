@@ -82,4 +82,3 @@ module AtcoderGreedy
     end
   end
 end
-

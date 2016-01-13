@@ -10,7 +10,7 @@ module AtcoderGreedy
     end
   end
 
-  TEMPLATE_PATH = '/Users/KeigoOgawa/work/atcoder_greedy/lib/atcoder_greedy/templates/'
+  TEMPLATE_PATH = File.join(File.dirname(__dir__), '/templates')
   SOLVE_TEMPLATE = open(TEMPLATE_PATH + '/ruby/solve.rb', &:read)
   PROBLEM_NAMES = %w(A B C D)
 

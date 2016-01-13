@@ -1,4 +1,5 @@
 class Languages
+  ALL_LANGUAGES = %w(rb cpp)
   def initialize(solve_file)
     @solve_file = solve_file
   end

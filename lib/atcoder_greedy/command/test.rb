@@ -4,7 +4,7 @@ require 'atcoder_greedy/lib/test_case'
 
 module AtcoderGreedy
   class Command < Thor
-    desc 'test [PROBLEMNAME]', 'test your solution'
+    desc 'test [PROBLEM_FILE_NAME]', 'test your solution'
 
     def test(problem_name)
       TestCase.new(problem_name).validate

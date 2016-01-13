@@ -63,6 +63,7 @@ class Contest
       in_file.close
 
       solve_file_content = @solve_template.clone
+      solve_file_content.gsub!(/DATE/, Time.now.strftime('%F'))
       solve_file_content.gsub!(/CONTEST/, @name.upcase)
       solve_file_content.gsub!(/PROBLEM/, url[:name].upcase)
       solve_file = File.new(problem_dir + "/#{url[:name]}.#{@language}", 'w')

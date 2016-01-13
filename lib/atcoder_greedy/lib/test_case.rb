@@ -85,6 +85,7 @@ class TestCase
     end
   end
 
+  # HACK: move to Languages
   def get_solve(solve_file)
     case File.extname(solve_file)
       when '.rb'

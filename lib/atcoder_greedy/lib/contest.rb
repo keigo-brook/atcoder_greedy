@@ -1,64 +1,57 @@
 require 'byebug'
+require 'uri'
 
 class Contest
   attr_accessor :name, :url
 
-  def initialize(name, **options)
+  def initialize(url, **options)
     @language = AtcoderGreedy.config[:language]
-    @name = name
-    @problem_names = %w(A B C D)
-
-    puts "Create #{name} contest files"
-    @base_url = create_contest_url(name)
-    puts "Contest url is #{@base_url}"
-
-    @problem_urls = create_contest_problem_urls(name)
-
+    @url = url
+    set_contest_info
     set_directories(options[:directory])
 
-    if options[:only] != 'templates'
-      create_inputs
-    end
-
-    if options[:only] != 'input'
-      template_path = File.join(File.dirname(__dir__), '/templates')
-      @solve_template = open(template_path + "/#{@language}/solve.#{@language}", &:read)
-      create_templates
-    end
+    create_inputs if options[:only] != 'templates'
+    create_templates if options[:only] != 'input'
 
     puts 'Set up done.'
   end
 
-  def create_contest_url(contest_name)
-    'http://' + contest_name + '.contest.atcoder.jp'
-  end
+  def set_contest_info
+    print 'Set contest info ...'
+    @name = URI.parse(@url).host.split('.').first
+    charset = nil
+    html = open(@url + '/assignments') do |f|
+      charset = f.charset
+      f.read
+    end
+    doc = Nokogiri::HTML.parse(html, nil, charset)
 
-  def create_contest_problem_urls(contest_name)
-    urls = []
-    if (contest_name.include?('abc') && contest_name[3..5].to_i > 19) ||
-        (contest_name.include?('arc') && contest_name[3..5].to_i > 34)
-      task_num = %w(a b c d)
-    else
-      task_num = %w(1 2 3 4)
+    problems = nil
+    doc.xpath('//tbody').each do |tbody|
+      problems = tbody.xpath('.//a[@class="linkwrapper"]')
     end
 
-    4.times do |i|
-      urls.push(name: "#{@problem_names[i]}", path: @base_url + "/tasks/#{contest_name}_#{task_num[i]}")
+    @problems = []
+    until problems.empty?
+      path = problems[0].attributes['href'].value
+      pro = problems.select { |l| l.attributes['href'].value == path }
+      problems = problems.reject { |l| l.attributes['href'].value == path }
+      @problems.push(name: pro[0].inner_text, path: path)
     end
-    urls
+    puts 'Done!'
   end
 
   def create_inputs
     print 'Create inputs ... '
-    @problem_urls.each_with_index do |url, pro_i|
+    @problems.each_with_index do |problem, pro_i|
       # urlからインプット、アウトプットパラメータをとってきてファイルにしまう
       charset = nil
-      html = open(url[:path]) do |f|
+      html = open(@url + problem[:path]) do |f|
         charset = f.charset
         f.read
       end
       doc = Nokogiri::HTML.parse(html, nil, charset)
-      in_file = File.new(@dir + "/input_#{@problem_names[pro_i]}.txt", 'w')
+      in_file = File.new(@dir + "/input_#{problem[:name]}.txt", 'w')
 
       params = doc.xpath('//pre')
       params.shift
@@ -79,12 +72,14 @@ class Contest
 
   def create_templates
     print 'Create Templates ... '
-    @problem_urls.each_with_index do |url, pro_i|
-      solve_file_content = @solve_template.clone
+    template_path = File.join(File.dirname(__dir__), '/templates')
+    solve_template = open(template_path + "/#{@language}/solve.#{@language}", &:read)
+    @problems.each_with_index do |problem|
+      solve_file_content = solve_template.clone
       solve_file_content.gsub!(/DATE/, Time.now.strftime('%F'))
       solve_file_content.gsub!(/CONTEST/, @name.upcase)
-      solve_file_content.gsub!(/PROBLEM/, url[:name].upcase)
-      solve_file = File.new(@dir + "/#{url[:name]}.#{@language}", 'w')
+      solve_file_content.gsub!(/PROBLEM/, problem[:name])
+      solve_file = File.new(@dir + "/#{problem[:name]}.#{@language}", 'w')
       solve_file.print solve_file_content
       solve_file.close
     end

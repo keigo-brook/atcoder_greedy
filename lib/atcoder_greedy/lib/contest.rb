@@ -7,17 +7,17 @@ class Contest
   def initialize(url, **options)
     @language = AtcoderGreedy.config[:language]
     @url = url
-    set_contest_info
+    set_contest_info(options[:problems])
     set_directories(options[:directory])
 
     create_inputs if options[:only] != 'templates'
     create_templates if options[:only] != 'input'
 
-    puts 'Set up done.'
+    puts 'Set up done. Go for it!'
   end
 
-  def set_contest_info
-    print 'Set contest info ...'
+  def set_contest_info(option_problems)
+    print 'Set contest info ... '
     @name = URI.parse(@url).host.split('.').first
     charset = nil
     html = open(@url + '/assignments') do |f|
@@ -26,17 +26,21 @@ class Contest
     end
     doc = Nokogiri::HTML.parse(html, nil, charset)
 
-    problems = nil
+    all_problems = nil
     doc.xpath('//tbody').each do |tbody|
-      problems = tbody.xpath('.//a[@class="linkwrapper"]')
+      all_problems = tbody.xpath('.//a[@class="linkwrapper"]')
     end
 
     @problems = []
-    until problems.empty?
-      path = problems[0].attributes['href'].value
-      pro = problems.select { |l| l.attributes['href'].value == path }
-      problems = problems.reject { |l| l.attributes['href'].value == path }
-      @problems.push(name: pro[0].inner_text, path: path)
+    until all_problems.empty?
+      path = all_problems[0].attributes['href'].value
+      pro = all_problems.select { |l| l.attributes['href'].value == path }
+      all_problems = all_problems.reject { |l| l.attributes['href'].value == path }
+      name = pro[0].inner_text
+      if option_problems.empty? || (!option_problems.empty? && option_problems.include?(name))
+        @problems.push(name: pro[0].inner_text, path: path)
+        print "#{name} "
+      end
     end
     puts 'Done!'
   end

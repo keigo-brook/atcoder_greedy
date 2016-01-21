@@ -7,12 +7,12 @@ module AtcoderGreedy
     desc 'create [CONTESTURL]', 'create contest templates for [CONTESTURL]'
     option :only_templates, aliases: "\--ot"
     option :only_input, aliases: "\--oi"
-    option :select_problem, aliases: '-p', default: 'A B C D', desc: 'create only select problem'
+    option :select_problem, aliases: '-p', default: nil, desc: 'create only select problem'
     option :set_directory, aliases: '-d', default: '', desc: 'set target directory'
     def create(contest_url)
       user_options = {
           only: '',
-          problem: options[:select_problem].split,
+          problems: [],
           directory: options[:set_directory]
       }
       if options[:only_input] && options[:only_templates]
@@ -22,6 +22,8 @@ module AtcoderGreedy
       elsif options[:only_templates]
         user_options[:only] = 'templates'
       end
+
+      user_options[:problems] = options[:select_problem].split unless options[:select_problem].nil?
 
       Contest.new(contest_url, user_options)
     end

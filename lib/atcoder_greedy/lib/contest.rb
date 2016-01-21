@@ -14,7 +14,7 @@ class Contest
 
     @problem_urls = create_contest_problem_urls(name)
 
-    create_directories
+    set_directories(options[:directory])
 
     if options[:only] != 'templates'
       create_inputs
@@ -25,7 +25,6 @@ class Contest
       @solve_template = open(template_path + "/#{@language}/solve.#{@language}", &:read)
       create_templates
     end
-
 
     puts 'Set up done.'
   end
@@ -52,7 +51,6 @@ class Contest
   def create_inputs
     print 'Create inputs ... '
     @problem_urls.each_with_index do |url, pro_i|
-      problem_dir = "./#{@name}"
       # urlからインプット、アウトプットパラメータをとってきてファイルにしまう
       charset = nil
       html = open(url[:path]) do |f|
@@ -60,7 +58,7 @@ class Contest
         f.read
       end
       doc = Nokogiri::HTML.parse(html, nil, charset)
-      in_file = File.new(problem_dir + "/input_#{@problem_names[pro_i]}.txt", 'w')
+      in_file = File.new(@dir + "/input_#{@problem_names[pro_i]}.txt", 'w')
 
       params = doc.xpath('//pre')
       params.shift
@@ -82,22 +80,29 @@ class Contest
   def create_templates
     print 'Create Templates ... '
     @problem_urls.each_with_index do |url, pro_i|
-      problem_dir = "./#{@name}"
-
       solve_file_content = @solve_template.clone
       solve_file_content.gsub!(/DATE/, Time.now.strftime('%F'))
       solve_file_content.gsub!(/CONTEST/, @name.upcase)
       solve_file_content.gsub!(/PROBLEM/, url[:name].upcase)
-      solve_file = File.new(problem_dir + "/#{url[:name]}.#{@language}", 'w')
+      solve_file = File.new(@dir + "/#{url[:name]}.#{@language}", 'w')
       solve_file.print solve_file_content
       solve_file.close
     end
     puts 'Done!'
   end
 
-  def create_directories
-    print 'Create contest directory ... '
-    FileUtils.mkdir(@name)
+  def set_directories(directory)
+    print 'Set contest directory ... '
+    if directory == ''
+      FileUtils.mkdir(@name)
+      @dir = "./#{@name}"
+    else
+      if Dir.exists?(directory)
+        @dir = directory
+      else
+        raise "ERROR: Directory doesn't exists:#{@dir}"
+      end
+    end
     puts 'Done!'
   end
 end

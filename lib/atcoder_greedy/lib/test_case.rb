@@ -2,6 +2,7 @@ require 'diff/lcs'
 require 'tempfile'
 require 'benchmark'
 require 'atcoder_greedy/lib/languages'
+
 class TestCase
   def initialize(problem_name)
     language = File.extname(problem_name)

@@ -1,19 +1,32 @@
+require 'byebug'
+
 class Contest
   attr_accessor :name, :url
 
-  def initialize(name)
+  def initialize(name, **options)
     @language = AtcoderGreedy.config[:language]
-    template_path = File.join(File.dirname(__dir__), '/templates')
-    @solve_template = open(template_path + "/#{@language}/solve.#{@language}", &:read)
-    @problem_names = %w(A B C D)
     @name = name
+    @problem_names = %w(A B C D)
+
     puts "Create #{name} contest files"
     @base_url = create_contest_url(name)
     puts "Contest url is #{@base_url}"
+
     @problem_urls = create_contest_problem_urls(name)
-    puts 'Create directories'
+
     create_directories
-    create_templates
+
+    if options[:only] != 'templates'
+      create_inputs
+    end
+
+    if options[:only] != 'input'
+      template_path = File.join(File.dirname(__dir__), '/templates')
+      @solve_template = open(template_path + "/#{@language}/solve.#{@language}", &:read)
+      create_templates
+    end
+
+
     puts 'Set up done.'
   end
 
@@ -36,7 +49,8 @@ class Contest
     urls
   end
 
-  def create_templates
+  def create_inputs
+    print 'Create inputs ... '
     @problem_urls.each_with_index do |url, pro_i|
       problem_dir = "./#{@name}"
       # urlからインプット、アウトプットパラメータをとってきてファイルにしまう
@@ -61,6 +75,14 @@ class Contest
       end
 
       in_file.close
+    end
+    puts 'Done!'
+  end
+
+  def create_templates
+    print 'Create Templates ... '
+    @problem_urls.each_with_index do |url, pro_i|
+      problem_dir = "./#{@name}"
 
       solve_file_content = @solve_template.clone
       solve_file_content.gsub!(/DATE/, Time.now.strftime('%F'))
@@ -70,10 +92,12 @@ class Contest
       solve_file.print solve_file_content
       solve_file.close
     end
+    puts 'Done!'
   end
 
   def create_directories
-    # コンテストディレクトリ作成
+    print 'Create contest directory ... '
     FileUtils.mkdir(@name)
+    puts 'Done!'
   end
 end

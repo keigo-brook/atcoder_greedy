@@ -12,7 +12,8 @@ module AtcoderGreedy
         puts "Your current language is [#{AtcoderGreedy.config[:language]}]."
       else
         Dir.mkdir(config_path)
-        File.new(config_path + '/settings.yml', 'w')
+        yml_path = AtcoderGreedy.get_config_path + '/settings.yml'
+        File.open(yml_path, 'w').close
       end
       puts "Choose default language from: #{languages}"
       print "Input languages: "
@@ -27,7 +28,6 @@ module AtcoderGreedy
         end
       end
 
-      AtcoderGreedy.save_config
       puts "Update Your default language to [#{AtcoderGreedy.config[:language]}]."
     end
   end

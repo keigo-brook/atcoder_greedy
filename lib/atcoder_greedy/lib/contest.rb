@@ -1,52 +1,66 @@
+require 'uri'
+require 'atcoder_greedy'
+require 'atcoder_greedy/lib/greedy_template'
+
 class Contest
   attr_accessor :name, :url
 
-  def initialize(name)
-    @language = AtcoderGreedy.config[:language]
-    template_path = File.join(File.dirname(__dir__), '/templates')
-    @solve_template = open(template_path + "/#{@language}/solve.#{@language}", &:read)
-    @problem_names = %w(A B C D)
-    @name = name
-    puts "Create #{name} contest files"
-    @base_url = create_contest_url(name)
-    puts "Contest url is #{@base_url}"
-    @problem_urls = create_contest_problem_urls(name)
-    puts 'Create directories'
-    create_directories
-    create_templates
-    puts 'Set up done.'
-  end
-
-  def create_contest_url(contest_name)
-    'http://' + contest_name + '.contest.atcoder.jp'
-  end
-
-  def create_contest_problem_urls(contest_name)
-    urls = []
-    if (contest_name.include?('abc') && contest_name[3..5].to_i > 19) ||
-        (contest_name.include?('arc') && contest_name[3..5].to_i > 34)
-      task_num = %w(a b c d)
+  def initialize(url, **options)
+    if options[:language] != ''
+      @language = options[:language]
     else
-      task_num = %w(1 2 3 4)
+      @language = AtcoderGreedy.config[:language]
     end
+    @url = url
+    set_contest_info(options[:problems])
+    set_directories(options[:directory])
 
-    4.times do |i|
-      urls.push(name: "#{@problem_names[i]}", path: @base_url + "/tasks/#{contest_name}_#{task_num[i]}")
-    end
-    urls
+    create_inputs unless options[:without][:input]
+    create_templates(options[:template]) unless options[:without][:template]
+
+    puts 'Set up done. Go for it!'
   end
 
-  def create_templates
-    @problem_urls.each_with_index do |url, pro_i|
-      problem_dir = "./#{@name}"
-      # urlからインプット、アウトプットパラメータをとってきてファイルにしまう
+  def set_contest_info(option_problems)
+    print 'Set contest info ... '
+    @name = URI.parse(@url).host.split('.').first
+    charset = nil
+    html = open(@url + '/assignments') do |f|
+      charset = f.charset
+      f.read
+    end
+    doc = Nokogiri::HTML.parse(html, nil, charset)
+
+    all_problems = nil
+    doc.xpath('//tbody').each do |tbody|
+      all_problems = tbody.xpath('.//a[@class="linkwrapper"]')
+    end
+
+    @problems = []
+    until all_problems.empty?
+      path = all_problems[0].attributes['href'].value
+      pro = all_problems.select { |l| l.attributes['href'].value == path }
+      all_problems = all_problems.reject { |l| l.attributes['href'].value == path }
+      name = pro[0].inner_text
+      if option_problems.empty? || (!option_problems.empty? && option_problems.include?(name))
+        @problems.push(name: pro[0].inner_text, path: path)
+        print "#{name} "
+      end
+    end
+    puts 'Done!'
+  end
+
+  def create_inputs
+    print 'Create inputs ... '
+    @problems.each do |problem|
+      # take input and output params from url and save to file
       charset = nil
-      html = open(url[:path]) do |f|
+      html = open(@url + problem[:path]) do |f|
         charset = f.charset
         f.read
       end
       doc = Nokogiri::HTML.parse(html, nil, charset)
-      in_file = File.new(problem_dir + "/input_#{@problem_names[pro_i]}.txt", 'w')
+      in_file = File.new(@dir + "/input_#{problem[:name]}.txt", 'w')
 
       params = doc.xpath('//pre')
       params.shift
@@ -61,19 +75,53 @@ class Contest
       end
 
       in_file.close
+    end
+    puts 'Done!'
+  end
 
-      solve_file_content = @solve_template.clone
+  def create_templates(option_template)
+    print 'Create Templates ... '
+    if option_template == ''
+      # use user default or system default template
+      if AtcoderGreedy.config[:default_template][:"#{@language}"] != ''
+        solve_template = open(AtcoderGreedy.config[:default_template][:"#{@language}"], &:read)
+      else
+        solve_template = open(File.dirname(__dir__) + '/templates' + "/#{@language}/solve.#{@language}", &:read)
+      end
+    else
+      # use option_template
+      template_path = GreedyTemplate.get_template_path(option_template)
+      if template_path.nil?
+        raise "ERROR: Template #{option_template} doesn't found"
+      else
+        solve_template = open(template_path, &:read)
+      end
+    end
+
+    @problems.each_with_index do |problem|
+      solve_file_content = solve_template.clone
       solve_file_content.gsub!(/DATE/, Time.now.strftime('%F'))
       solve_file_content.gsub!(/CONTEST/, @name.upcase)
-      solve_file_content.gsub!(/PROBLEM/, url[:name].upcase)
-      solve_file = File.new(problem_dir + "/#{url[:name]}.#{@language}", 'w')
+      solve_file_content.gsub!(/PROBLEM/, problem[:name])
+      solve_file = File.new(@dir + "/#{problem[:name]}.#{@language}", 'w')
       solve_file.print solve_file_content
       solve_file.close
     end
+    puts 'Done!'
   end
 
-  def create_directories
-    # コンテストディレクトリ作成
-    FileUtils.mkdir(@name)
+  def set_directories(directory)
+    print 'Set contest directory ... '
+    if directory == ''
+      FileUtils.mkdir(@name)
+      @dir = "./#{@name}"
+    else
+      if Dir.exists?(directory)
+        @dir = directory
+      else
+        raise "ERROR: Directory doesn't exists:#{@dir}"
+      end
+    end
+    puts 'Done!'
   end
 end

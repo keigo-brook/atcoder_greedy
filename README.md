@@ -64,10 +64,11 @@ $ atcoder_greedy template OPTION
 | --delete FILE_NAME      | -d    | FILE_NAMEで指定されたテンプレートを削除します. |
 
 ## 使用例
-ABC009の場合
+### 例1
+ARC014の場合
 
 ```
-$ atcoder_greedy create abc009
+$ atcoder_greedy create http://arc014.contest.atcoder.jp
 ```
 
 とすると、以下のようなファイルが生成される。
@@ -113,6 +114,13 @@ Correct Answer:
 1
 
 Test done.
+```
+
+### 例2
+ARC015にて, カレントディレクトリにA問題のインプットファイルのみ生成したい場合
+
+```
+ $ atcoder_greedy create http://arc015.contest.atcoder.jp --nt -p A -d ./
 ```
 
 ## TODO,実装したい機能

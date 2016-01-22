@@ -31,6 +31,7 @@ $
 $ atcoder_greedy create CONTEST_URL OPTION
 ```
 作成時に使用できるオプション
+
 | option name                       | alias | detail  |
 | --------------------------------- | ----- | ------- |
 | --no-templates                    | --nt  | テンプレートファイルを生成しません. |
@@ -54,6 +55,7 @@ $ atcoder_greedy test PROBLEM_FILE_NAME
 $ atcoder_greedy template OPTION
 ```
 使用できるオプション
+
 | option name             | alias |  detail  |
 | ------------------------| ----- | -------  |
 | --add FILE_PATH         | -a    | FILE_PATHで指定されたファイルをテンプレートに追加します. |

@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'fileutils'
 require 'yaml'
 require 'psych'
+require 'byebug'
 
 require "atcoder_greedy/version"
 require 'atcoder_greedy/command'
@@ -12,50 +13,58 @@ module AtcoderGreedy
   @config = {
       user_id: '',
       password: '',
-      language: 'rb'
+      language: '',
+      default_template: {
+          rb: '',
+          cpp: '',
+          c: '',
+          py: ''
+      }
   }
 
+  @valid_languages = %w(rb cpp c py)
   @valid_config_keys = @config.keys
 
   # Configure through hash
   def self.configure(opts = {})
-    opts.each { |k, v| @config[k.to_sym] = v if @valid_config_keys.include? k.to_sym }
-  end
-
-  # Configure through yaml file
-  def self.configure_with(path_to_yaml_file)
-    begin
-      config = YAML::load(IO.read(path_to_yaml_file))
-    rescue Errno::ENOENT
-      puts "YAML configuration file couldn't be found. Using defaults."; return
-    rescue Psych::SyntaxError
-      puts "YAML configuration file contains invalid syntax. Using defaults."; return
+    self.config
+    opts.each do |k, v|
+      if v.is_a?(Hash)
+        v.each do |ck, cv|
+          @config[k.to_sym][ck.to_sym] = cv if @valid_languages.include?(ck.to_s)
+        end
+      else
+        @config[k.to_sym] = v if @valid_config_keys.include? k.to_sym
+      end
     end
-
-    configure(config)
+    self.save_config
   end
 
   def self.get_config_path
     config_path = Dir.home + '/.atcoder_greedy'
     if Dir.exists?(config_path)
-      # use user settings
       config_path
     else
-      # use default settings
-      File.join(File.dirname(__dir__), '/lib/atcoder_greedy')
+      raise "Can't find config directory. please init by command: 'atcoder_greedy config'.'"
     end
   end
 
   def self.config
     yml_path = get_config_path + '/settings.yml'
-    configure_with(yml_path)
-    @config
+    yml_file = YAML.load_file(yml_path)
+    if yml_file
+      @config = yml_file
+    else
+      File.open(yml_path, 'w') { |f| YAML.dump(@config, f) }
+    end
   end
 
   def self.save_config
     yml_path = get_config_path + '/settings.yml'
-    f = File.open(yml_path, 'w')
-    f.print(@config.to_yaml)
-    f.close
+    if File.exists?(yml_path)
+      File.open(yml_path, 'w') { |f| YAML.dump(@config, f) }
+    else
+      raise "Can't find #{yml_path}. please set configure."
+    end
   end
 end

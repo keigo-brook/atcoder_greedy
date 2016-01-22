@@ -8,12 +8,14 @@ module AtcoderGreedy
     option :only_templates, aliases: "\--ot"
     option :only_input, aliases: "\--oi"
     option :select_problem, aliases: '-p', default: nil, desc: 'create only select problem'
+    option :select_template, aliases: '-t', default: '', desc: 'select generate template'
     option :set_directory, aliases: '-d', default: '', desc: 'set target directory'
     def create(contest_url)
       user_options = {
           only: '',
           problems: [],
-          directory: options[:set_directory]
+          directory: options[:set_directory],
+          template: options[:select_template]
       }
       if options[:only_input] && options[:only_templates]
         raise "Command Argument Error: You can't use 'only' options at the same time."

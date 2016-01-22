@@ -1,5 +1,7 @@
 require 'byebug'
 require 'uri'
+require 'atcoder_greedy'
+require 'atcoder_greedy/lib/greedy_template'
 
 class Contest
   attr_accessor :name, :url
@@ -11,7 +13,7 @@ class Contest
     set_directories(options[:directory])
 
     create_inputs if options[:only] != 'templates'
-    create_templates if options[:only] != 'input'
+    create_templates(options[:template]) if options[:only] != 'input'
 
     puts 'Set up done. Go for it!'
   end
@@ -74,10 +76,25 @@ class Contest
     puts 'Done!'
   end
 
-  def create_templates
+  def create_templates(option_template)
     print 'Create Templates ... '
-    template_path = File.join(File.dirname(__dir__), '/templates')
-    solve_template = open(template_path + "/#{@language}/solve.#{@language}", &:read)
+    if option_template == ''
+      # use user default or system default template
+      if AtcoderGreedy.config[:default_template][:"#{@language}"] != ''
+        solve_template = open(AtcoderGreedy.config[:default_template][:"#{@language}"], &:read)
+      else
+        solve_template = open(File.dirname(__dir__) + '/templates' + "/#{@language}/solve.#{@language}", &:read)
+      end
+    else
+      # use option_template
+      template_path = GreedyTemplate.get_template_path(option_template)
+      if template_path.nil?
+        raise "ERROR: Template #{option_template} doesn't found"
+      else
+        solve_template = open(template_path, &:read)
+      end
+    end
+
     @problems.each_with_index do |problem|
       solve_file_content = solve_template.clone
       solve_file_content.gsub!(/DATE/, Time.now.strftime('%F'))

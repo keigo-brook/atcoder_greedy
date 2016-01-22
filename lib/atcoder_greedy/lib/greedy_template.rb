@@ -8,7 +8,7 @@ class GreedyTemplate
   end
 
   def add(file_path)
-    # 言語別にディレクトリに格納
+    # save template to language directory
     file = File.open(file_path)
     file_name = File.basename(file_path)
     type_dir = @dir + '/' + File.extname(file_path).delete('.')

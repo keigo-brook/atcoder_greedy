@@ -4,7 +4,7 @@ require 'atcoder_greedy/lib/contest'
 
 module AtcoderGreedy
   class Command < Thor
-    desc 'create [CONTESTURL]', 'create contest templates for [CONTESTURL]'
+    desc 'create [CONTESTURL] [OPTION]', 'create contest templates for [CONTESTURL]'
     option :no_templates, type: :boolean, default: false, aliases: "\--nt"
     option :no_input, type: :boolean, default: false, aliases: "\--ni"
     option :select_problem, aliases: '-p', default: nil, desc: 'create only select problem'

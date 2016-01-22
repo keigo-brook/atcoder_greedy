@@ -1,4 +1,3 @@
-require 'byebug'
 require 'uri'
 require 'atcoder_greedy'
 require 'atcoder_greedy/lib/greedy_template'
@@ -7,13 +6,17 @@ class Contest
   attr_accessor :name, :url
 
   def initialize(url, **options)
-    @language = AtcoderGreedy.config[:language]
+    if options[:language] != ''
+      @language = options[:language]
+    else
+      @language = AtcoderGreedy.config[:language]
+    end
     @url = url
     set_contest_info(options[:problems])
     set_directories(options[:directory])
 
-    create_inputs if options[:only] != 'templates'
-    create_templates(options[:template]) if options[:only] != 'input'
+    create_inputs unless options[:without][:input]
+    create_templates(options[:template]) unless options[:without][:template]
 
     puts 'Set up done. Go for it!'
   end
@@ -49,8 +52,8 @@ class Contest
 
   def create_inputs
     print 'Create inputs ... '
-    @problems.each_with_index do |problem, pro_i|
-      # urlからインプット、アウトプットパラメータをとってきてファイルにしまう
+    @problems.each do |problem|
+      # take input and output params from url and save to file
       charset = nil
       html = open(@url + problem[:path]) do |f|
         charset = f.charset

@@ -10,18 +10,21 @@ class GreedyTemplate
   def add(file_path)
     # 言語別にディレクトリに格納
     file = File.open(file_path)
+    file_name = File.basename(file_path)
     type_dir = @dir + '/' + File.extname(file_path).delete('.')
     Dir.mkdir(type_dir) unless Dir.exists?(type_dir)
-    if File.exists?(type_dir + '/' + File.basename(file_path))
-      print "Template [#{File.basename(file_path)}] is already exists. Do you update?[y/N]:"
+    if File.exists?(type_dir + '/' + file_name)
+      print "Template [#{file_name}] is already exists. Do you update?[y/N]:"
       s = $stdin.gets.chomp
       if s == 'y' || s == 'yes'
         FileUtils.cp(file, type_dir)
         puts 'Template file is updated.'
+        puts "if you want to use this file as a default, please run 'atcoder_greedy template -s #{file_name}'"
       end
     else
       FileUtils.cp(file, type_dir)
       puts 'Template file is added.'
+      puts "if you want to use this file as a default, please run 'atcoder_greedy template -s #{file_name}'"
     end
   end
 

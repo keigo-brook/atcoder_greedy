@@ -2,8 +2,6 @@ require 'open-uri'
 require 'nokogiri'
 require 'fileutils'
 require 'yaml'
-require 'psych'
-require 'byebug'
 
 require "atcoder_greedy/version"
 require 'atcoder_greedy/command'

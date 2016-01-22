@@ -32,7 +32,7 @@ $ atcoder_greedy create CONTEST_URL OPTION
 ```
 作成時に使用できるオプション
 
-| option name                          | alias | detail  |
+| option name ARGUMENT                         | alias | detail  |
 | ------------------------------------ | ----- | ------- |
 | --no-templates                       | --nt  | テンプレートファイルを生成しません. |
 | --no-input                           | --ni  | 入力ファイルを生成しません. |

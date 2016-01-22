@@ -32,14 +32,14 @@ $ atcoder_greedy create CONTEST_URL OPTION
 ```
 作成時に使用できるオプション
 
-| option name                       | alias | detail  |
-| --------------------------------- | ----- | ------- |
-| --no-templates                    | --nt  | テンプレートファイルを生成しません. |
-| --no-input                        | --ni  | 入力ファイルを生成しません. |
-| --select-problem PROBLEM_NAMES    | -p    | 指定した問題のみ生成します. 複数の問題を指定する場合は'A B' のように''で囲ってください. |
-| --select-directory DIR_PATH | -d    | 指定したディレクトリに生成します. |
-| --select-language LANGUAGE        | -l    | 指定した言語でテンプレートを生成します. |
-| --select-template TEMP_NAME   | -t    | 指定したテンプレートで生成します. |
+| option name                          | alias | detail  |
+| ------------------------------------ | ----- | ------- |
+| --no-templates                       | --nt  | テンプレートファイルを生成しません. |
+| --no-input                           | --ni  | 入力ファイルを生成しません. |
+| --select-problem PROBLEM_NAMES       | -p    | 指定した問題のみ生成します. 複数の問題を指定する場合は'A B' のように''で囲ってください. |
+| --select-directory DIR_PATH          | -d    | 指定したディレクトリに生成します. |
+| --select-language LANGUAGE           | -l    | 指定した言語でテンプレートを生成します. |
+| --select-template TEMP_NAME          | -t    | 指定したテンプレートで生成します. |
 
 ### testコマンド
 テストを実行します. 入力ファイルが生成されている必要があります.

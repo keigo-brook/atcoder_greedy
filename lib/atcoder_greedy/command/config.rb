@@ -1,5 +1,6 @@
 require 'atcoder_greedy'
 require 'atcoder_greedy/command'
+require 'atcoder_greedy/lib/languages'
 
 module AtcoderGreedy
   class Command < Thor

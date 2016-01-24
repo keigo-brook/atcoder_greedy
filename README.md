@@ -63,6 +63,12 @@ $ atcoder_greedy template OPTION
 | --set-default FILE_NAME | -s    | FILE_NAMEで指定されたテンプレートをその言語のデフォルトに設定します. |
 | --delete FILE_NAME      | -d    | FILE_NAMEで指定されたテンプレートを削除します. |
 
+### submitコマンド
+問題の提出を行います. コンテストディレクトリ内で実行してください.提出が成功した場合, 結果画面をブラウザで開きます.
+```
+$ atcoder_greedy submit [SUBMIT_FILE]
+```
+
 ## 使用例
 ### 例1
 ARC014の場合
@@ -75,6 +81,7 @@ $ atcoder_greedy create http://arc014.contest.atcoder.jp
 
 ```
 .
+├── .contest_info.yml
 ├── A.rb
 ├── B.rb
 ├── C.rb
@@ -114,6 +121,12 @@ Correct Answer:
 1
 
 Test done.
+```
+
+A問題を提出したい場合は, 
+```
+$ atcoder_greedy submit A.rb
+Submit [A.rb] ... Done!
 ```
 
 ### 例2

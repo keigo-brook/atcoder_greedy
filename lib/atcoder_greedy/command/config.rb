@@ -1,6 +1,5 @@
 require 'atcoder_greedy'
 require 'atcoder_greedy/command'
-require 'atcoder_greedy/lib/languages'
 
 module AtcoderGreedy
   class Command < Thor
@@ -41,7 +40,7 @@ module AtcoderGreedy
           AtcoderGreedy.configure(password: password)
           break
         else
-          puts 'Failed! Cofirm input and try again.'
+          puts 'Failed! Confirm input and try again.'
         end
       end
 

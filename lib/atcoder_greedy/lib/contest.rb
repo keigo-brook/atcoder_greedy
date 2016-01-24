@@ -1,5 +1,6 @@
 require 'uri'
 require 'cgi'
+require 'atcoder_greedy/lib/atcoder'
 require 'atcoder_greedy'
 require 'atcoder_greedy/lib/greedy_template'
 
@@ -25,26 +26,9 @@ class Contest
   end
 
   def set_agent
-    print 'Login ... '
-    if AtcoderGreedy.config[:user_id].nil? || AtcoderGreedy.config[:user_id].size == 0
-      puts 'You still not set account info.'
-      print 'Input User id: '
-      user_id = $stdin.gets.chomp!
-      print 'Input password: '
-      password = $stdin.gets.chomp!
-    else
-      user_id = AtcoderGreedy.config[:user_id]
-      password = AtcoderGreedy.config[:password]
-    end
-    @agent = Mechanize.new
-    @agent.get(@url + '/login') do |page|
-      p = page.form_with(action: '/login') do |f|
-        f.field_with(name: 'name').value = user_id
-        f.field_with(name: 'password').value = password
-      end.submit
-      raise 'Login error' unless p.response['x-imojudge-simpleauth'] == 'Passed'
-    end
-    puts 'Done!'
+    atcoder = Atcoder.new
+    atcoder.login(@url)
+    @agent = atcoder.agent
   end
 
   def set_contest_info(option_problems)

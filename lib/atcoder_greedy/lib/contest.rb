@@ -1,9 +1,11 @@
 require 'uri'
+require 'cgi'
+require 'atcoder_greedy/lib/atcoder'
 require 'atcoder_greedy'
 require 'atcoder_greedy/lib/greedy_template'
 
 class Contest
-  attr_accessor :name, :url
+  attr_accessor :name, :url, :dir, :problems
 
   def initialize(url, **options)
     if options[:language] != ''
@@ -12,39 +14,51 @@ class Contest
       @language = AtcoderGreedy.config[:language]
     end
     @url = url
+
+    set_agent
     set_contest_info(options[:problems])
     set_directories(options[:directory])
 
-    create_inputs unless options[:without][:input]
-    create_templates(options[:template]) unless options[:without][:template]
+    create_inputs unless options[:no][:input]
+    create_templates(options[:template]) unless options[:no][:template]
 
     puts 'Set up done. Go for it!'
+  end
+
+  def set_agent
+    atcoder = Atcoder.new
+    atcoder.login(@url)
+    @agent = atcoder.agent
   end
 
   def set_contest_info(option_problems)
     print 'Set contest info ... '
     @name = URI.parse(@url).host.split('.').first
-    charset = nil
-    html = open(@url + '/assignments') do |f|
-      charset = f.charset
-      f.read
-    end
-    doc = Nokogiri::HTML.parse(html, nil, charset)
+    html = @agent.get(@url + '/assignments').content.toutf8
+    doc = Nokogiri::HTML.parse(html, nil, 'utf8')
 
-    all_problems = nil
+    all_problems = []
+    task_ids = []
     doc.xpath('//tbody').each do |tbody|
+      tbody.xpath('.//a[starts-with(@href,"/submit")]').each do |a|
+        task_ids.push(CGI.parse(URI.parse(a.attributes['href'].value).query)['task_id'].first)
+      end
       all_problems = tbody.xpath('.//a[@class="linkwrapper"]')
     end
 
     @problems = []
-    until all_problems.empty?
-      path = all_problems[0].attributes['href'].value
-      pro = all_problems.select { |l| l.attributes['href'].value == path }
-      all_problems = all_problems.reject { |l| l.attributes['href'].value == path }
-      name = pro[0].inner_text
-      if option_problems.empty? || (!option_problems.empty? && option_problems.include?(name))
-        @problems.push(name: pro[0].inner_text, path: path)
-        print "#{name} "
+    if all_problems.nil?
+      raise 'Failed to get info. Do you participate this contest?'
+    else
+      until all_problems.empty?
+        path = all_problems[0].attributes['href'].value
+        pro = all_problems.select { |l| l.attributes['href'].value == path }
+        all_problems = all_problems.reject { |l| l.attributes['href'].value == path }
+        name = pro[0].inner_text
+        if option_problems.empty? || (!option_problems.empty? && option_problems.include?(name))
+          @problems.push(name: pro[0].inner_text, path: path, task_id: task_ids.shift)
+          print "#{name} "
+        end
       end
     end
     puts 'Done!'
@@ -54,12 +68,8 @@ class Contest
     print 'Create inputs ... '
     @problems.each do |problem|
       # take input and output params from url and save to file
-      charset = nil
-      html = open(@url + problem[:path]) do |f|
-        charset = f.charset
-        f.read
-      end
-      doc = Nokogiri::HTML.parse(html, nil, charset)
+      html = @agent.get(@url + problem[:path]).content.toutf8
+      doc = Nokogiri::HTML.parse(html, nil, 'utf8')
       in_file = File.new(@dir + "/input_#{problem[:name]}.txt", 'w')
 
       params = doc.xpath('//pre')

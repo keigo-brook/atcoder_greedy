@@ -48,6 +48,7 @@ class TestCase
 
   def validate
     my_solve = get_solve(@exec_file)
+    passed = 0
     begin
       if my_solve.compile(@problem_name)
         puts '-------------------- Compile Done --------------------'
@@ -71,16 +72,17 @@ class TestCase
         correct = File.open("#{@output[j].path}").read
         diffs = Diff::LCS.diff(myout, correct)
         if diffs.size == 0
+          passed += 1
           puts "-------------------- Testcase ##{j} -------------------- PASSED! Time: #{sprintf("%.5f", result)}s"
         else
           puts "-------------------- Testcase ##{j} -------------------- FAILED! Time: #{sprintf("%.5f", result)}s"
-          puts "Your Output:"
+          puts 'Your Output:'
           puts "#{myout}\n"
-          puts "Correct Answer:"
+          puts 'Correct Answer:'
           puts "#{correct}\n"
         end
       end
-      puts "Test done."
+      puts "Test done. #{passed}/#{@input.size} passed."
     rescue => e
       puts e
     end

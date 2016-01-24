@@ -6,6 +6,7 @@
 - コンテストフォルダ, 問題ファイルの生成
 - サンプルインプット、アウトプットを用いたテストファイルの生成, テスト実行
 - ユーザーテンプレート機能
+- 提出機能
 - ruby, c/c++ に対応
 
 ## Installation
@@ -63,6 +64,12 @@ $ atcoder_greedy template OPTION
 | --set-default FILE_NAME | -s    | FILE_NAMEで指定されたテンプレートをその言語のデフォルトに設定します. |
 | --delete FILE_NAME      | -d    | FILE_NAMEで指定されたテンプレートを削除します. |
 
+### submitコマンド
+問題の提出を行います. コンテストディレクトリ内で実行してください.提出が成功した場合, 結果画面をブラウザで開きます.
+```
+$ atcoder_greedy submit [SUBMIT_FILE]
+```
+
 ## 使用例
 ### 例1
 ARC014の場合
@@ -75,6 +82,7 @@ $ atcoder_greedy create http://arc014.contest.atcoder.jp
 
 ```
 .
+├── .contest_info.yml
 ├── A.rb
 ├── B.rb
 ├── C.rb
@@ -116,6 +124,12 @@ Correct Answer:
 Test done.
 ```
 
+A問題を提出したい場合は, 
+```
+$ atcoder_greedy submit A.rb
+Submit [A.rb] ... Done!
+```
+
 ### 例2
 ARC015にて, カレントディレクトリにA問題のインプットファイルのみ生成したい場合
 
@@ -125,7 +139,6 @@ ARC015にて, カレントディレクトリにA問題のインプットファ�
 
 ## TODO,実装したい機能
 
-- 提出機能
 - 言語対応の拡大
 - gemのテスト作成
 

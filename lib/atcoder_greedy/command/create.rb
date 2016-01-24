@@ -14,18 +14,33 @@ module AtcoderGreedy
 
     def create(contest_url)
       user_options = {
-          without: {input: false, template: false},
+          no: {input: false, template: false},
           problems: [],
           directory: options[:select_directory],
           language: options[:select_language],
           template: options[:select_template]
       }
 
-      user_options[:without][:input] = true if options[:no_input]
-      user_options[:without][:template] = true if options[:no_templates]
+      user_options[:no][:input] = true if options[:no_input]
+      user_options[:no][:template] = true if options[:no_templates]
       user_options[:problems] = options[:select_problem].split unless options[:select_problem].nil?
 
-      Contest.new(contest_url, user_options)
+      contest = Contest.new(contest_url, user_options)
+      # TODO: contest_infoが存在したときの処理
+      File.open("#{contest.dir}/.contest_info.yml", 'w') do |f|
+        info = {
+            name: contest.name,
+            url: contest.url,
+            task: {}
+        }
+        contest.problems.each do |p|
+          info[:task][:"#{p[:name]}"] = {
+              id: p[:task_id]
+          }
+        end
+
+        f.puts info.to_yaml
+      end
     end
   end
 end

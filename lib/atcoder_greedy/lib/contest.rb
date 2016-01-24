@@ -37,25 +37,28 @@ class Contest
     html = @agent.get(@url + '/assignments').content.toutf8
     doc = Nokogiri::HTML.parse(html, nil, 'utf8')
 
-    all_problems = nil
+    all_problems = []
     task_ids = []
     doc.xpath('//tbody').each do |tbody|
       tbody.xpath('.//a[starts-with(@href,"/submit")]').each do |a|
         task_ids.push(CGI.parse(URI.parse(a.attributes['href'].value).query)['task_id'].first)
       end
       all_problems = tbody.xpath('.//a[@class="linkwrapper"]')
-
     end
 
     @problems = []
-    until all_problems.empty?
-      path = all_problems[0].attributes['href'].value
-      pro = all_problems.select { |l| l.attributes['href'].value == path }
-      all_problems = all_problems.reject { |l| l.attributes['href'].value == path }
-      name = pro[0].inner_text
-      if option_problems.empty? || (!option_problems.empty? && option_problems.include?(name))
-        @problems.push(name: pro[0].inner_text, path: path, task_id: task_ids.shift)
-        print "#{name} "
+    if all_problems.nil?
+      raise 'Failed to get info. Do you participate this contest?'
+    else
+      until all_problems.empty?
+        path = all_problems[0].attributes['href'].value
+        pro = all_problems.select { |l| l.attributes['href'].value == path }
+        all_problems = all_problems.reject { |l| l.attributes['href'].value == path }
+        name = pro[0].inner_text
+        if option_problems.empty? || (!option_problems.empty? && option_problems.include?(name))
+          @problems.push(name: pro[0].inner_text, path: path, task_id: task_ids.shift)
+          print "#{name} "
+        end
       end
     end
     puts 'Done!'

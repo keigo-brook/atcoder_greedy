@@ -20,6 +20,7 @@ module AtcoderGreedy
     desc 'submit [SUBMIT_FILE]', 'submit your solution'
 
     # TODO: 提出言語のオプション
+    map 's' => 'submit'
     def submit(submit_file)
       print "Submit [#{submit_file}] ... "
       contest_info = YAML.load_file("./.contest_info.yml")

@@ -6,6 +6,7 @@ module AtcoderGreedy
   class Command < Thor
     desc 'test [PROBLEM_FILE_NAME]', 'test your solution'
 
+    map 't' => 'test'
     def test(problem_name)
       TestCase.new(problem_name).validate
     end

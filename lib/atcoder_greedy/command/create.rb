@@ -11,6 +11,7 @@ module AtcoderGreedy
     option :select_directory, aliases: '-d', default: '', desc: 'select target directory'
     option :select_language, aliases: '-l', default: '', desc: 'select language'
     option :select_template, aliases: '-t', default: '', desc: 'select generate template'
+    map 'c' => 'create'
 
     def create(contest_url)
       user_options = {

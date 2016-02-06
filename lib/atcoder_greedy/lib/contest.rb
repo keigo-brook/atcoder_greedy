@@ -91,7 +91,7 @@ class Contest
 
   def create_templates(option_template)
     print 'Create Templates ... '
-    if option_template == ''
+    if option_template.to_s == ''
       # use user default or system default template
       if AtcoderGreedy.config[:default_template][:"#{@language}"] != ''
         solve_template = open(AtcoderGreedy.config[:default_template][:"#{@language}"], &:read)
@@ -122,7 +122,7 @@ class Contest
 
   def set_directories(directory)
     print 'Set contest directory ... '
-    if directory == ''
+    if directory.to_s == ''
       FileUtils.mkdir(@name)
       @dir = "./#{@name}"
     else

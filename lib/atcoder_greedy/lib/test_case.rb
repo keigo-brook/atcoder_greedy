@@ -97,6 +97,8 @@ class TestCase
         Cpp.new(solve_file)
       when '.c'
         C.new(solve_file)
+      when '.hs'
+        Hs.new(solve_file)
       else
         raise 'Unknown Language'
     end

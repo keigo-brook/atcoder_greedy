@@ -10,6 +10,8 @@ def get_language_id(extname)
       2003
     when '.c'
       2001
+    when '.hs'
+      2033
     else
       raise "Unknown extname: #{extname}"
   end

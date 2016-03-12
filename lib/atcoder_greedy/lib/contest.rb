@@ -92,11 +92,11 @@ class Contest
   def create_templates(option_template)
     print 'Create Templates ... '
     if option_template.to_s == ''
-      # use user default or system default template
-      if AtcoderGreedy.config[:default_template][:"#{@language}"] != ''
-        solve_template = open(AtcoderGreedy.config[:default_template][:"#{@language}"], &:read)
-      else
+      # use system default or user default template
+      if AtcoderGreedy.config[:default_template][:"#{@language}"].nil? || AtcoderGreedy.config[:default_template][:"#{@language}"].to_s == ''
         solve_template = open(File.dirname(__dir__) + '/templates' + "/#{@language}/solve.#{@language}", &:read)
+      else
+        solve_template = open(AtcoderGreedy.config[:default_template][:"#{@language}"], &:read)
       end
     else
       # use option_template

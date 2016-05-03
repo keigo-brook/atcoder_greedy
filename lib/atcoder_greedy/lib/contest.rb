@@ -5,7 +5,7 @@ require 'atcoder_greedy'
 require 'atcoder_greedy/lib/greedy_template'
 
 class Contest
-  attr_accessor :name, :url, :dir, :problems
+  attr_accessor :name, :url, :dir, :problems, :date
 
   def initialize(url, **options)
     if options[:language] != ''
@@ -36,6 +36,7 @@ class Contest
     @name = URI.parse(@url).host.split('.').first
     html = @agent.get(@url + '/assignments').content.toutf8
     doc = Nokogiri::HTML.parse(html, nil, 'utf8')
+    @date = Date.parse(doc.xpath('//time').first.text)
 
     all_problems = []
     task_ids = []

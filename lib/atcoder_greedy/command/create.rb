@@ -31,6 +31,7 @@ module AtcoderGreedy
       File.open("#{contest.dir}/.contest_info.yml", 'w') do |f|
         info = {
             name: contest.name,
+            date: contest.date,
             url: contest.url,
             task: {}
         }

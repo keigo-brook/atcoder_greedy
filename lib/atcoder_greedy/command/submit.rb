@@ -1,7 +1,6 @@
 require 'atcoder_greedy'
 require 'atcoder_greedy/command'
 require 'atcoder_greedy/lib/atcoder'
-require 'byebug'
 
 def get_language_id(extname, contest_date)
   # TODO: 日付の検証
@@ -58,6 +57,14 @@ module AtcoderGreedy
         p = page.form_with(action: "/submit?task_id=#{task_id}") do |f|
           f.field_with(name: 'source_code').value = File.open(submit_file).read
           f.field_with(name: 'task_id').value = task_id
+
+          # 日付情報が書いていなかった場合取得する
+          if contest_info[:date].nil?
+            contest_info[:date] = Date.parse(page.xpath('//time').first.text)
+            File.open("./.contest_info.yml", 'w') do |f|
+              f.puts contest_info.to_yaml
+            end
+          end
           f.field_with(name: "language_id_#{task_id}").value =
               get_language_id(File.extname(submit_file), contest_info[:date])
         end.submit

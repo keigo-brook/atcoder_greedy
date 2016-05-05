@@ -28,19 +28,18 @@ module AtcoderGreedy
 
       contest = Contest.new(contest_url, user_options)
       # TODO: contest_infoが存在したときの処理
-      File.open("#{contest.dir}/.contest_info.yml", 'w') do |f|
-        info = {
-            name: contest.name,
-            date: contest.date,
-            url: contest.url,
-            task: {}
+      info = {
+          name: contest.name,
+          date: contest.date,
+          url: contest.url,
+          task: {}
+      }
+      contest.problems.each do |p|
+        info[:task][:"#{p[:name]}"] = {
+            id: p[:task_id]
         }
-        contest.problems.each do |p|
-          info[:task][:"#{p[:name]}"] = {
-              id: p[:task_id]
-          }
-        end
-
+      end
+      File.open("#{contest.dir}/.contest_info.yml", 'w') do |f|
         f.puts info.to_yaml
       end
     end

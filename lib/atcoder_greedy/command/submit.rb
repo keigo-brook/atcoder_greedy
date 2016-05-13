@@ -5,28 +5,56 @@ require 'atcoder_greedy/lib/atcoder'
 def get_language_id(extname, contest_date)
   # TODO: 日付の検証
   if contest_date < Date.new(2015, 3, 1)
+    # ABC001 ~ ABC019
     case extname
       when '.rb'
+        # Ruby (1.9.3)
         9
       when '.cpp'
+        # C++11 (GCC 4.8.1)
         10
       when '.c'
+        # C (GCC 4.6.4)
         13
       when '.hs'
+        # Haskell (GHC 7.4.1)
         11
       else
         raise "Unknown extname: #{extname}"
     end
-  else
+  elsif contest_date < Date.new(2016, 3, 20)
+    # ABC020 ~ ABC 034
     case extname
       when '.rb'
+        # Ruby (2.1.5p273)
         2010
       when '.cpp'
+        # C++11 (GCC 4.9.2)
         2003
       when '.c'
+        # C (GCC 4.9.2)
         2001
       when '.hs'
+        # Haskell (Haskell Platform 2014.2.0.0)
         2033
+      else
+        raise "Unknown extname: #{extname}"
+    end
+  else
+    # ABC035~
+    case extname
+      when '.rb'
+        # Ruby (2.3.0)
+        3024
+      when '.cpp'
+        # C++14 (GCC 5.3.0)
+        3003
+      when '.c'
+        # C (GCC 5.3.0)
+        3002
+      when '.hs'
+        # Haskell (GHC 7.10)
+        3014
       else
         raise "Unknown extname: #{extname}"
     end

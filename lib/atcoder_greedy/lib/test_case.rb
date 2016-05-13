@@ -73,9 +73,9 @@ class TestCase
         diffs = Diff::LCS.diff(myout, correct)
         if diffs.size == 0
           passed += 1
-          puts "-------------------- Testcase ##{j} -------------------- PASSED! Time: #{sprintf("%.5f", result)}s"
+          puts "-------------------- Testcase ##{j + 1} -------------------- PASSED! Time: #{sprintf("%.5f", result)}s"
         else
-          puts "-------------------- Testcase ##{j} -------------------- FAILED! Time: #{sprintf("%.5f", result)}s"
+          puts "-------------------- Testcase ##{j + 1} -------------------- FAILED! Time: #{sprintf("%.5f", result)}s"
           puts 'Your Output:'
           puts "#{myout}\n"
           puts 'Correct Answer:'
@@ -97,6 +97,8 @@ class TestCase
         Cpp.new(solve_file)
       when '.c'
         C.new(solve_file)
+      when '.hs'
+        Hs.new(solve_file)
       else
         raise 'Unknown Language'
     end

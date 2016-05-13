@@ -18,11 +18,12 @@ module AtcoderGreedy
           rb: '',
           cpp: '',
           c: '',
-          py: ''
+          py: '',
+          hs: ''
       }
   }
 
-  @valid_languages = %w(rb cpp c py)
+  @valid_languages = %w(rb cpp c py hs)
   @valid_config_keys = @config.keys
 
   # Configure through hash

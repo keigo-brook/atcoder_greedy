@@ -1,4 +1,3 @@
-# require 'FileUtils'
 require 'atcoder_greedy'
 
 class GreedyTemplate

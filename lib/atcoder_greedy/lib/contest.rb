@@ -5,7 +5,7 @@ require 'atcoder_greedy'
 require 'atcoder_greedy/lib/greedy_template'
 
 class Contest
-  attr_accessor :name, :url, :dir, :problems
+  attr_accessor :name, :url, :dir, :problems, :date
 
   def initialize(url, **options)
     if options[:language] != ''
@@ -36,6 +36,7 @@ class Contest
     @name = URI.parse(@url).host.split('.').first
     html = @agent.get(@url + '/assignments').content.toutf8
     doc = Nokogiri::HTML.parse(html, nil, 'utf8')
+    @date = Date.parse(doc.xpath('//time').first.text)
 
     all_problems = []
     task_ids = []
@@ -91,12 +92,12 @@ class Contest
 
   def create_templates(option_template)
     print 'Create Templates ... '
-    if option_template == ''
-      # use user default or system default template
-      if AtcoderGreedy.config[:default_template][:"#{@language}"] != ''
-        solve_template = open(AtcoderGreedy.config[:default_template][:"#{@language}"], &:read)
-      else
+    if option_template.to_s == ''
+      # use system default or user default template
+      if AtcoderGreedy.config[:default_template][:"#{@language}"].nil? || AtcoderGreedy.config[:default_template][:"#{@language}"].to_s == ''
         solve_template = open(File.dirname(__dir__) + '/templates' + "/#{@language}/solve.#{@language}", &:read)
+      else
+        solve_template = open(AtcoderGreedy.config[:default_template][:"#{@language}"], &:read)
       end
     else
       # use option_template
@@ -122,7 +123,7 @@ class Contest
 
   def set_directories(directory)
     print 'Set contest directory ... '
-    if directory == ''
+    if directory.to_s == ''
       FileUtils.mkdir(@name)
       @dir = "./#{@name}"
     else
